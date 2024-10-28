@@ -1,6 +1,5 @@
 <?php
-
-include_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-db/utils.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-db/utils.php";
 
 function defaultChartSettings()
 {
