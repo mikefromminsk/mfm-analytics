@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER[DOCUMENT_ROOT] . "/mfm-analytics/utils.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-analytics/utils.php";
 
 $key = get_required(key);
 $period_name = get_required(period_name);
