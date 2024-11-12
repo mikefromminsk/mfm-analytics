@@ -16,12 +16,15 @@ query("CREATE TABLE IF NOT EXISTS `candles` (
 
 //query("DROP TABLE IF EXISTS `events`;");
 query("CREATE TABLE IF NOT EXISTS `events` (
-  `from` varchar(64) COLLATE utf8_bin NOT NULL,
-  `from_id` varchar(64) COLLATE utf8_bin NOT NULL,
-  `to` varchar(64) COLLATE utf8_bin NOT NULL,
-  `to_id` varchar(64) COLLATE utf8_bin NOT NULL,
-  `event` varchar(64) COLLATE utf8_bin NOT NULL,
-  `param` varchar(64) COLLATE utf8_bin NOT NULL,
+  `name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `from` varchar(64) COLLATE utf8_bin NULL,
+  `from_id` varchar(64) COLLATE utf8_bin NULL,
+  `to` varchar(64) COLLATE utf8_bin NULL,
+  `to_id` varchar(64) COLLATE utf8_bin NULL,
+  `value` varchar(64) COLLATE utf8_bin NULL,
+  `session` varchar(64) COLLATE utf8_bin NULL,
+  `username` varchar(64) COLLATE utf8_bin NULL,
+  `version` varchar(64) COLLATE utf8_bin NULL,
   `time` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 

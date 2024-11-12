@@ -1,0 +1,37 @@
+
+
+
+
+
+
+
+
+
+in wallet settings funnels:
+
+funnel login
+
+funnel bonus
+
+funnel buy
+
+funnel sell
+
+funnel launch
+
+event review
+
+in wallet settings reviews:
+
+review
+
+reviews
+
+
+
+funnel
+bonus - start - startApp
+home - profile usdt openScreen
+profile usdt buy - onClick
+onReview
+home - profile usdt closeScreen
