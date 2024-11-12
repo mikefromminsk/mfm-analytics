@@ -1,0 +1,14 @@
+<md-bottom-sheet class="col">
+    <div class="row header align-start-center">
+        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="back()">
+        Reviews
+    </div>
+    <div class="col content input-content">
+        <div class="col" ng-repeat="item in events">
+            <div>{{formatTimeDiff(item.time)}}</div>
+            <div class="row">
+                <textarea class="flex radius8" cols="30" rows="3" ng-model="item.value"></textarea>
+            </div>
+        </div>
+    </div>
+</md-bottom-sheet>

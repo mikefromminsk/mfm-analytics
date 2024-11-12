@@ -1,0 +1,20 @@
+<md-bottom-sheet class="col">
+    <div class="row header align-start-center">
+        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="back()">
+        Review
+    </div>
+    <div class="col content input-content">
+        <p>Is your experience was positive? Please leave your feedback.</p>
+        <textarea class="radius8" cols="30" rows="3" ng-model="message" placeholder="Type your feedback here..."></textarea>
+        <div class="row gap16">
+            <div class="flex primary-button red-back" ng-click="dislike(message)">
+                <img class="img40 img-black"
+                     src="/mfm-wallet/img/dislike.svg">
+            </div>
+            <div class="flex primary-button green-back" ng-click="like(message)">
+                <img class="img40 img-black"
+                     src="/mfm-wallet/img/like.svg">
+            </div>
+        </div>
+    </div>
+</md-bottom-sheet>

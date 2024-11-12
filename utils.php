@@ -88,30 +88,27 @@ function getCandleChange24($key)
 }
 
 
-function trackEvent($name, $from, $from_id, $to, $to_id, $value = "", $session = "", $username = "", $version = "")
+function trackEvent($type, $name, $value = "", $session = "", $username = "", $version = "")
 {
     insertRow(events, [
+        type => $type,
         name => $name,
-        from => $from,
-        from_id => $from_id,
-        to => $to,
-        to_id => $to_id,
-        value => $value, // md5($value)
-        time => time(),
+        value => $value,
         session => $session,
         username => $username,
-        version => $version
+        version => $version,
+        time => time(),
     ]);
 }
 
-function getEvent($name, $from = null, $from_id = null, $to = null, $to_id = null, $value = null)
+function getEvent($type, $name, $value = "", $session = "", $username = "", $version = "")
 {
     $sql = "select * from events where `name` = '$name'";
-    if ($from != null) $sql .= " and `from` = '$from'";
-    if ($from_id != null) $sql .= " and `from_id` = '$from_id'";
-    if ($to != null) $sql .= " and `to` = '$to'";
-    if ($to_id != null) $sql .= " and `to_id` = '$to_id'";
+    if ($type != null) $sql .= " and `type` = '$type'";
     if ($value != null) $sql .= " and `value` = '$value'";
+    if ($session != null) $sql .= " and `session` = '$session'";
+    if ($username != null) $sql .= " and `username` = '$username'";
+    if ($version != null) $sql .= " and `version` = '$version'";
     $sql .= " order by `time` desc limit 1";
     return selectRow($sql);
 }
