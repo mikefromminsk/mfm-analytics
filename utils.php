@@ -103,8 +103,8 @@ function trackEvent($type, $name, $value = "", $session = "", $username = "", $v
 
 function getEvent($type, $name, $value = "", $session = "", $username = "", $version = "")
 {
-    $sql = "select * from events where `name` = '$name'";
-    if ($type != null) $sql .= " and `type` = '$type'";
+    $sql = "select * from events where `type` = '$type'";
+    if ($name != null) $sql .= " and `name` = '$name'";
     if ($value != null) $sql .= " and `value` = '$value'";
     if ($session != null) $sql .= " and `session` = '$session'";
     if ($username != null) $sql .= " and `username` = '$username'";

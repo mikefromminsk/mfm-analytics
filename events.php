@@ -50,4 +50,4 @@ $response[events] = $session_events ?: [];
 $response[funnel] = $funnel;
 $response[success] = true;
 
-echo json_encode($response);
+echo json_encode($response, JSON_PRETTY_PRINT);
