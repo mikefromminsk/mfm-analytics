@@ -72,8 +72,7 @@ function addChart($scope, key) {
 
 function openChart(key, success) {
     showBottomSheet('/mfm-analytics/chart/index.html', success, function ($scope) {
-            $scope.key = key
-            addFormats($scope)
-            addChart($scope, key)
+        $scope.key = key
+        addChart($scope, key)
     })
 }
