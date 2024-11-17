@@ -103,12 +103,17 @@ function trackEvent($type, $name, $value = "", $session = "", $username = "", $v
 
 function getEvent($type, $name, $value = "", $session = "", $username = "", $version = "")
 {
+    return getEvents($type, $name, $value, 0, 1, $session, $username, $version)[0];
+}
+
+function getEvents($type, $name, $value = "", $page = 0, $size = 10, $session = "", $username = "", $version = "")
+{
     $sql = "select * from events where `type` = '$type'";
     if ($name != null) $sql .= " and `name` = '$name'";
     if ($value != null) $sql .= " and `value` = '$value'";
     if ($session != null) $sql .= " and `session` = '$session'";
     if ($username != null) $sql .= " and `username` = '$username'";
     if ($version != null) $sql .= " and `version` = '$version'";
-    $sql .= " order by `time` desc limit 1";
-    return selectRow($sql);
+    $sql .= " order by `time` desc limit $page, $size";
+    return select($sql);
 }
