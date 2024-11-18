@@ -1,10 +1,34 @@
 function openReviews(success) {
     trackCall(arguments)
-    showBottomSheet('/mfm-analytics/reviews/index.html', success, function ($scope) {
+    showDialog('/mfm-analytics/reviews/index.html', success, function ($scope) {
+        $scope.reviews = []
+        let likes = []
+        let dislikes = []
         postContract("mfm-analytics", "events.php", {
-            event_names: ["dislike"],
+            name: "dislike",
         }, function (response) {
-            $scope.events = response.events
+            dislikes = response.events
+            $scope.reviews = dislikes.concat(likes)
+            $scope.$apply()
         })
+        postContract("mfm-analytics", "events.php", {
+            name: "like",
+        }, function (response) {
+            likes = response.events
+            $scope.reviews = dislikes.concat(likes)
+            $scope.$apply()
+        })
+
+        $scope.sendAnswer = function sendAnswer(id, item) {
+            trackCall(arguments)
+            postContract("mfm-telegram", "send_to_address.php", {
+                parent: id,
+                address: item.username,
+                message: item.answer,
+            }, function () {
+                item.answered = true
+                $scope.$apply()
+            })
+        }
     })
 }

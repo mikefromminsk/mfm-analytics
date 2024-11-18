@@ -1,9 +1,25 @@
-<md-bottom-sheet class="col">
+<md-dialog class="fill col">
     <div class="row header align-start-center">
-        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="back()">
-        Funnel
+        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="close()">
+        Funnel {{funnel_name}}
     </div>
-    <div class="col content">
-        {{funnel}}
+    <div class="col content m16">
+        <div class="row"
+             ng-repeat="(key, val) in data.funnel">
+            <div class="flex">
+                {{key}}
+            </div>
+            <div class="flex row align-center back-green"
+                 ng-style="{'max-width': (val / data.sessions * 100) + '%'}">
+                {{val}}
+            </div>
+        </div>
+        <div class="row mt16 size16 bold align-center">
+            Success {{formatPercent(data.success_percent, 2)}}
+        </div>
+        <p>Other funnels:</p>
+        <div class="button"
+             ng-repeat="(key, val) in funnels"
+             ng-click="openFunnel(key)">{{key}}</div>
     </div>
-</md-bottom-sheet>
+</md-dialog>

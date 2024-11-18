@@ -1,14 +1,25 @@
-<md-bottom-sheet class="col">
+<md-dialog class="fill col">
     <div class="row header align-start-center">
-        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="back()">
+        <img class="ripple" src="/mfm-wallet/img/back.svg" ng-click="close()">
         Reviews
     </div>
     <div class="col content input-content">
-        <div class="col" ng-repeat="item in events">
-            <div>{{formatTimeDiff(item.time)}}</div>
-            <div class="row">
-                <textarea class="flex radius8" cols="30" rows="3" ng-model="item.value"></textarea>
+        <div class="col" ng-repeat="item in reviews">
+            <div class="row align-start-center">
+                <img class="img24 mr8 img-white" src="/mfm-wallet/img/user-circle.svg">
+                <div class="flex">{{item.username}}</div>
+                <div class="mh8">{{formatTimeDiff(item.time)}}</div>
+                <img class="img20 img-green" src="/mfm-wallet/img/like.svg" ng-show="item.name == 'like'">
+                <img class="img20 img-red" src="/mfm-wallet/img/dislike.svg" ng-show="item.name == 'dislike'">
+            </div>
+            <p class="mv8">{{item.value}}</p>
+            <div class="col">
+                <textarea class="flex" ng-model="item.answer"
+                          oninput="this.style['min-height'] = ''; this.style['min-height'] = this.scrollHeight +'px'"></textarea>
+                <div class="row align-end mt4">
+                    <div class="button" ng-click="sendAnswer(item.id, item)" ng-disabled="item.answered || !item.answer">Answer</div>
+                </div>
             </div>
         </div>
     </div>
-</md-bottom-sheet>
+</md-dialog>
