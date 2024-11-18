@@ -4,10 +4,10 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-db/utils.php";
 function defaultChartSettings()
 {
     return [
-        '1M' => 60,
-        '1H' => 60 * 60,
-        '1D' => 60 * 60 * 24,
-        '1W' => 60 * 60 * 24 * 7,
+        'M' => 60,
+        'H' => 60 * 60,
+        'D' => 60 * 60 * 24,
+        'W' => 60 * 60 * 24 * 7,
     ];
 }
 
@@ -74,14 +74,14 @@ function getCandles($key, $period_name, $count = 10)
 
 function getCandleLastValue($key)
 {
-    $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = '1M' "
+    $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = 'M' "
         . "  order by `period_time` desc limit 1");
     return $last_candle[close];
 }
 
 function getCandleChange24($key)
 {
-    $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = '1D' "
+    $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = 'D' "
         . "order by `period_time` desc limit 1");
     if ($last_candle == null) return 0;
     return $last_candle[close] - $last_candle[open];

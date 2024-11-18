@@ -1,11 +1,3 @@
-<div class="row size12">
-    <div class="flex row mv8 align-center-center"
-         ng-class="{'bold': period == period_name}"
-         ng-repeat="period in periods"
-         ng-click="setPeriod(period)">
-        {{period}}
-    </div>
-</div>
 <div ng-show="showNoData"
      class="row align-center-center"
      style="width: 100%; min-height: 300px; max-height: 300px;">
@@ -14,4 +6,12 @@
 <div id="chart"
      style="width: 100%; min-height: 300px; max-height: 300px;"
      ng-show="!showNoData">
+</div>
+<div class="row align-center pv8">
+    <div class="row ph16 pv8 mh16"
+         ng-class="{'back-gray radius-default': period == period_name}"
+         ng-repeat="period in periods"
+         ng-click="setPeriod(period)">
+        <p class="text2">{{period}}</p>
+    </div>
 </div>

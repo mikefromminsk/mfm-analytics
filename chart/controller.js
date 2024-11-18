@@ -41,8 +41,8 @@ function addChart($scope, key) {
         window.chartLoaded = true
     }
 
-    $scope.periods = ['1M', '1H', '1D', '1W']
-    $scope.period_name = '1M'
+    $scope.periods = ['M', 'H', 'D', 'W']
+    $scope.period_name = 'M'
     $scope.setPeriod = function (period_name) {
         $scope.period_name = period_name
         postContract("mfm-analytics", "candles.php", {
