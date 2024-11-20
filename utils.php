@@ -109,21 +109,6 @@ function trackEvent($type, $name, $value = "", $parent = null)
         trackEvent(field, $key, $value, $id);
 }
 
-
-function trackObject($type, $name, $value = "")
-{
-    insertRow(events, [
-        type => $type,
-        name => $name,
-        value => $value,
-        session => get_string(session),
-        username => get_string(gas_address),
-        version => get_string(version),
-        parent => get_int(parent),
-        time => time(),
-    ]);
-}
-
 function getEvent($type, $name, $value = "")
 {
     return getEvents($type, $name, $value, 0, 1)[0];
