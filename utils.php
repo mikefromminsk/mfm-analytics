@@ -88,7 +88,29 @@ function getCandleChange24($key)
 }
 
 
-function trackEvent($type, $name, $value = "")
+function trackEvent($type, $name, $value = "", $parent = null)
+{
+    $array = [];
+    if (is_array($value)) {
+        $array = $value;
+        $value = "";
+    }
+    $id = insertRowAndGetId(events, [
+        type => $type,
+        name => $name,
+        value => $value,
+        session => get_string(session),
+        username => get_string(gas_address),
+        version => get_string(version),
+        parent => get_int(parent, $parent),
+        time => time(),
+    ]);
+    foreach ($array as $key => $value)
+        trackEvent(field, $key, $value, $id);
+}
+
+
+function trackObject($type, $name, $value = "")
 {
     insertRow(events, [
         type => $type,
@@ -116,4 +138,15 @@ function getEvents($type, $name, $value = "", $page = 0, $size = 10, $fromTime =
     if ($fromTime != null) $sql .= " and `time` >= $fromTime";
     $sql .= " order by `time` desc limit $page, $size";
     return select($sql);
+}
+
+
+function callLimitSec($sec)
+{
+    $path = getScriptPath();
+    $last_event = getEvent("call_limit", $path, $sec);
+    if ($last_event != null && time() - $last_event[time] < $sec) {
+        error("call limit $sec sec");
+    }
+    trackEvent("call_limit", $path, $sec);
 }

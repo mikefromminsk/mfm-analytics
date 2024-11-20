@@ -1,10 +1,10 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-analytics/utils.php";
 
-$parent = get_int(parent);
-$type = get_required(type, "ui_call");
+$type = get_required(type);
 $name = get_required(name);
 $value = get_string(value);
+$parent = get_int(parent);
 $page = get_int(page, 0);
 $size = get_int(size, 10);
 $time_from = get_int(time_from, time() - 60 * 60 * 24 * 7);
