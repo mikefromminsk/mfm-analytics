@@ -28,7 +28,5 @@ query("CREATE TABLE IF NOT EXISTS `events` (
    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 
-$response[success] = true;
-
-echo json_encode($response);
+echo json_encode([success => true]);
 
