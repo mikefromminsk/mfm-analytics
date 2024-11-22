@@ -3,6 +3,7 @@
 
 
 
+перед drop table сделать sql backup
 
 in wallet settings funnels:
 

@@ -1,6 +1,6 @@
 <md-dialog class="fill col">
     <div class="row header align-start-center">
-        <p class="flex">Funnel {{funnel_name}}</p>
+        <p class="flex">{{str.funnel}} {{funnel_name}}</p>
         <div class="row img32 radius-default back-gray align-center-center ripple" ng-click="close()">
             <img class="img16 img-gray400" src="/mfm-wallet/img/close.svg">
         </div>
@@ -19,7 +19,6 @@
         <div class="row mt16 size16 bold align-center">
             Success {{formatPercent(data.success_percent, 2)}}
         </div>
-        <p>Other funnels:</p>
         <div class="button"
              ng-repeat="(key, val) in funnels"
              ng-click="openFunnel(key)">{{key}}</div>
