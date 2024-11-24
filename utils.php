@@ -126,12 +126,19 @@ function getEvents($type, $name, $value = "", $page = 0, $size = 10, $fromTime =
 }
 
 
-function callLimitSec($sec)
+function limitPassSec($sec, $postfix = "")
 {
     $path = getScriptPath();
-    $last_event = getEvent("call_limit", $path, $sec);
+    $last_event = getEvent("call_limit", $path . $postfix, $sec);
     if ($last_event != null && time() - $last_event[time] < $sec) {
-        error("call limit $sec sec");
+        return false;
     }
-    trackEvent("call_limit", $path, $sec);
+    trackEvent("call_limit", $path . $postfix, $sec);
+    return true;
+}
+
+function callLimitPassSec($sec, $postfix = "")
+{
+    if (!limitPassSec($sec, $postfix))
+        error("call limit $sec sec");
 }
