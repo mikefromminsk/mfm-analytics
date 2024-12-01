@@ -1,22 +1,31 @@
-function openFunnel(funnel_name, success) {
+function openFunnel(success) {
+    trackCall(arguments)
     showDialog('/mfm-analytics/funnel/index.html', success, function ($scope) {
-        $scope.funnels = {
-            "buy": [
-                "openTokenProfile",
-                "openExchange",
-            ]
-        }
+        $scope.funnels = [
+            {
+                "title": "Email open",
+                "events": [
+                    "email:send",
+                    "ui:referer",
+                ]
+            },
+            {
+                "title": "Buy",
+                "events": [
+                    "ui:start",
+                    "ui:openTokenProfile",
+                ]
+            }
+        ]
 
-        $scope.openFunnel = function openFunnel(funnel_name) {
-            $scope.funnel_name = funnel_name
-            trackCall(arguments)
+        for (let funnel of $scope.funnels) {
             postContract("mfm-analytics", "funnel.php", {
-                event_names: $scope.funnels[funnel_name].join(","),
+                funnel: funnel.events.join(","),
             }, function (response) {
-                $scope.data = response
+                funnel.response = response
             })
         }
 
-        $scope.openFunnel(funnel_name)
+        addChart($scope, "ui:start")
     })
 }

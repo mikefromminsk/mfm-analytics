@@ -1,26 +1,42 @@
 <md-dialog class="fill col">
     <div class="row header align-start-center">
-        <p class="flex">{{str.funnel}} {{funnel_name}}</p>
+        <p class="flex">{{str.funnel}}</p>
         <div class="row align-center-center img32 back-gray radius-default ripple" ng-click="close()">
             <img class="img16 img-gray400" src="/mfm-wallet/img/close.svg">
         </div>
     </div>
-    <div class="col content m16">
-        <div class="row"
-             ng-repeat="(key, val) in data.funnel">
-            <div class="flex">
-                {{key}}
-            </div>
-            <div class="flex row align-center back-green"
-                 ng-style="{'max-width': (val / data.sessions * 100) + '%'}">
-                {{val}}
+    <div class="flex col content m16 scroll">
+        <p class="text1">Daily active users</p>
+        <div id="chart"
+             style="width: 100%; min-height: 300px; max-height: 300px;">
+        </div>
+        <div class="row align-center pv8">
+            <div class="row ph16 pv8 mh16"
+                 ng-class="{'back-gray radius-default': period == period_name}"
+                 ng-repeat="period in periods"
+                 ng-click="setPeriod(period)">
+                <p class="text2">{{str[period]}}</p>
             </div>
         </div>
-        <div class="row mt16 size16 bold align-center">
-            Success {{formatPercent(data.success_percent, 2)}}
+        <div class="mt16 col border-accent"
+             ng-repeat="funnel in funnels">
+            <p class="text1 p8 border-accent">{{funnel.title}}</p>
+            <div class="mt16"></div>
+            <div class="row ph8"
+                 ng-repeat="(key, val) in funnel.response.funnel">
+                <div class="flex-50">
+                    {{key}}
+                </div>
+                <div class="flex-50 row align-center">
+                    <div class="row align-center back-green"
+                         ng-style="{'min-width': (val / funnel.response.sessions * 100) + '%'}">
+                        {{val}}
+                    </div>
+                </div>
+            </div>
+            <div class="row mv16 size16 bold align-center">
+                Success {{formatPercent(funnel.response.success_percent * 100, 2)}}
+            </div>
         </div>
-        <div class="button"
-             ng-repeat="(key, val) in funnels"
-             ng-click="openFunnel(key)">{{key}}</div>
     </div>
 </md-dialog>

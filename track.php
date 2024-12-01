@@ -1,15 +1,11 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-analytics/utils.php";
 
-$type = get_required(type);
-$name = get_string(name);
+$app = get_required(app);
+$name = get_required(name);
 $value = get_string(value);
 
-if ($type == 'ui_start' && $name == null) {
-    $name = getProtocol();
-    $value = $_SERVER['REMOTE_ADDR'];
-}
-
-trackEvent($type, $name, $value);
+trackEvent($app, $name, $value);
+trackAccumulate("$app:$name");
 
 echo json_encode(['success' => true]);

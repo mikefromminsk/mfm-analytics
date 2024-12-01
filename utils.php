@@ -88,40 +88,38 @@ function getCandleChange24($key)
 }
 
 
-function trackEvent($type, $name, $value = "", $parent = null)
+function trackEvent($app, $name, $value = null)
 {
-    $array = [];
-    if (is_array($value)) {
-        $array = $value;
-        $value = "";
-    }
-    $id = insertRowAndGetId(events, [
-        type => $type,
+    if (is_array($value))
+        $value = trackObject($value);
+    insertRowAndGetId(events, [
+        ip => $_SERVER['REMOTE_ADDR'],
+        app => $app,
         name => $name,
         value => $value,
-        session => get_string(session),
-        username => get_string(gas_address),
-        version => get_string(version),
-        parent => get_int(parent, $parent),
+        user_id => get_string(user_id),
         time => time(),
     ]);
-    foreach ($array as $key => $value)
-        trackEvent(field, $key, $value, $id);
+    return $value;
 }
 
-function getEvent($type, $name, $value = "")
+function getEvent($app, $name, $value = "")
 {
-    return getEvents($type, $name, $value, 0, 1)[0];
+    return getEvents($app, $name, $value, 0, 1)[0];
 }
 
-function getEvents($type, $name, $value = "", $page = 0, $size = 10, $fromTime = null, $parent = null)
+function getEvents($app, $name, $value = "", $time_from = "", $ip = "", $page = 0, $size = 20)
 {
-    $sql = "select * from events where `type` = '$type'";
-    if ($parent != null) $sql .= " and `parent` = '$parent'";
-    if ($name != null) $sql .= " and `name` = '$name'";
-    if ($value != null) $sql .= " and `value` = '$value'";
-    if ($fromTime != null) $sql .= " and `time` >= $fromTime";
-    $sql .= " order by `time` desc limit $page, $size";
+    $sql = "select * from events"
+        . " where `app` = '$app'"
+        . " and `name` = '$name'";
+    if ($value != "")
+        $sql .= " and `value` = '$value'";
+    if ($time_from != "")
+        $sql .= " and `time` >= $time_from";
+    if ($ip != "")
+        $sql .= " and `ip` = '$ip'";
+    $sql .= " order by `time` desc limit " . ($page * $size) . ", $size";
     return select($sql);
 }
 
@@ -141,4 +139,28 @@ function callLimitPassSec($sec, $postfix = "")
 {
     if (!limitPassSec($sec, $postfix))
         error("call limit $sec sec");
+}
+
+
+function trackObject($object)
+{
+    $parent = random_key(objects, parent);
+    foreach ($object as $key => $value) {
+        insertRow(objects, [
+            parent => $parent,
+            key => $key,
+            value => $value,
+            time => time(),
+        ]);
+    }
+    return $parent;
+}
+
+function getObject($parent)
+{
+    $objects = select("select * from objects where `parent` = $parent");
+    $object = [];
+    foreach ($objects as $item)
+        $object[$item[key]] = $item[value];
+    return $object;
 }

@@ -5,6 +5,7 @@ function openReviews(success) {
         let likes = []
         let dislikes = []
         postContract("mfm-analytics", "events.php", {
+            app: "ui",
             name: "dislike",
         }, function (response) {
             dislikes = response.events
@@ -12,6 +13,7 @@ function openReviews(success) {
             $scope.$apply()
         })
         postContract("mfm-analytics", "events.php", {
+            app: "ui",
             name: "like",
         }, function (response) {
             likes = response.events
