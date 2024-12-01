@@ -88,7 +88,7 @@ function getCandleChange24($key)
 }
 
 
-function trackEvent($app, $name, $value = null)
+function trackEvent($app, $name, $value = null, $user_id = null)
 {
     if (is_array($value))
         $value = trackObject($value);
@@ -97,28 +97,48 @@ function trackEvent($app, $name, $value = null)
         app => $app,
         name => $name,
         value => $value,
-        user_id => get_string(user_id),
+        user_id => $user_id ?: get_string(gas_address),
         time => time(),
     ]);
     return $value;
 }
 
-function getEvent($app, $name, $value = "")
+function getEvent($app, $name, $value = null, $user_id = null)
 {
-    return getEvents($app, $name, $value, 0, 1)[0];
+    return getEvents([
+        app => $app,
+        name => $name,
+        value => $value,
+        user_id => $user_id,
+        size => 1
+    ])[0];
 }
 
-function getEvents($app, $name, $value = "", $time_from = "", $ip = "", $page = 0, $size = 20)
+function getEvents($params)
 {
+    $app = $params[app];
+    $name = $params[name];
+    $value = $params[value];
+    $time = $params[time];
+    $ip = $params[ip];
+    $user_id = $params[user_id];
+    $page = $params[page] ?: 0;
+    $size = $params[size] ?: 1000;
     $sql = "select * from events"
         . " where `app` = '$app'"
         . " and `name` = '$name'";
-    if ($value != "")
+    if ($value != null)
         $sql .= " and `value` = '$value'";
-    if ($time_from != "")
-        $sql .= " and `time` >= $time_from";
-    if ($ip != "")
-        $sql .= " and `ip` = '$ip'";
+    if ($time != null)
+        $sql .= " and `time` >= $time";
+    if ($ip != null && $user_id != null){
+        $sql .= " and (`ip` = '$ip' or `user_id` = '$user_id')";
+    } else {
+        if ($ip != null)
+            $sql .= " and `ip` = '$ip'";
+        if ($user_id != null)
+            $sql .= " and `user_id` = '$user_id'";
+    }
     $sql .= " order by `time` desc limit " . ($page * $size) . ", $size";
     return select($sql);
 }

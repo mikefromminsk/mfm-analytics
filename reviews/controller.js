@@ -21,11 +21,10 @@ function openReviews(success) {
             $scope.$apply()
         })
 
-        $scope.sendAnswer = function sendAnswer(id, item) {
+        $scope.sendAnswer = function sendAnswer(item) {
             trackCall(arguments)
             postContract("mfm-telegram", "send_to_address.php", {
-                parent: id,
-                address: item.username,
+                address: item.user_id,
                 message: item.answer,
             }, function () {
                 item.answered = true

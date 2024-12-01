@@ -16,37 +16,60 @@ function parseFunnel($funnel)
         $nameValue = explode("=", $appNameValue[1] ?: "");
         $step[name] = $nameValue[0];
         $step[value] = $nameValue[1] ?: "";
+        $step[count] = 0;
         $response[] = $step;
     }
     return $response;
 }
 
 $funnel = parseFunnel($funnel);
-$startEvent = array_shift($funnel);
-$events = getEvents($startEvent[app], $startEvent[name], $startEvent[value], $time_from, null, 0, 1000000) ?: [];
-$response[funnel][$startEvent[str]] = sizeof($events);
+$firstStep = array_shift($funnel);
+$events = getEvents([
+    app => $firstStep[app],
+    name => $firstStep[name],
+    value => $firstStep[value],
+    time => $time_from,
+    size => 10000
+]) ?: [];
+
+$firstStep[count] = sizeof($events);
+
 if (sizeof($events) > 0) {
-    foreach ($funnel as $step) {
-        $next_steps = [];
-        foreach ($events as $event) {
-            $next_step = getEvents($step[app], $step[name], $step[value], $event[time], $event[ip], 0, 1);
+    foreach ($events as $event) {
+        $ip = $event[ip];
+        $user_id = $event[user_id];
+        foreach ($funnel as &$step) {
+            $next_step = getEvents([
+                app => $step[app],
+                name => $step[name],
+                value => $step[value],
+                time => $event[time],
+                ip => $ip,
+                user_id => $user_id,
+                size => 1,
+            ]);
             if ($next_step != null) {
-                $next_steps[] = $next_step;
+                $step[count] += 1;
+                $next_step = $next_step[0];
+                $ip = $next_step[ip];
+                $user_id = $next_step[user_id];
             }
         }
-        $response[funnel][$step[str]] = sizeof($next_steps);
-        $events = $next_steps;
     }
 }
 
 
-if (sizeof($events) == 0) {
+if ($firstStep[count] == 0) {
     $response[sessions] = 0;
     $response[success_percent] = 0;
 } else {
-    $response[sessions] = $response[funnel][$startEvent[str]];
-    $response[success_percent] = round(sizeof($events) / $response[sessions], 2);
+    $response[sessions] = $firstStep[count];
+    $response[success_percent] = round(end($funnel)[count] / $firstStep[count], 4) * 100;
 }
 
+array_unshift($funnel, $firstStep);
+foreach ($funnel as $item) {
+    $response[funnel][$item[str]] = $item[count];
+}
 
 echo json_encode($response, JSON_PRETTY_PRINT);

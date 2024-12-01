@@ -6,6 +6,7 @@ function openAnalytics(success) {
                 "title": "Email open",
                 "events": [
                     "email:send",
+                    "email:readed",
                     "ui:referer",
                 ]
             },
