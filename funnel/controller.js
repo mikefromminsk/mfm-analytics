@@ -1,4 +1,4 @@
-function openFunnel(success) {
+function openAnalytics(success) {
     trackCall(arguments)
     showDialog('/mfm-analytics/funnel/index.html', success, function ($scope) {
         $scope.funnels = [
@@ -10,10 +10,11 @@ function openFunnel(success) {
                 ]
             },
             {
-                "title": "Buy",
+                "title": "Place orders",
                 "events": [
                     "ui:start",
                     "ui:openTokenProfile",
+                    "ui:place",
                 ]
             }
         ]
