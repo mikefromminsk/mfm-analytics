@@ -3,11 +3,19 @@ function openAnalytics(success) {
     showDialog('/mfm-analytics/funnel/index.html', success, function ($scope) {
         $scope.funnels = [
             {
+                "title": "Telegram open",
+                "events": [
+                    "tg:start",
+                    "ui:tg_referer",
+                    "ui:tg_link",
+                ]
+            },
+            {
                 "title": "Email open",
                 "events": [
                     "email:send",
                     "email:readed",
-                    "ui:referer",
+                    "ui:email_referer",
                 ]
             },
             {
