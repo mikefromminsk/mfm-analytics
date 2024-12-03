@@ -13,34 +13,44 @@ function defaultChartSettings()
 
 function trackLinear($key, $value)
 {
-    $timestamp = time();
-    foreach (defaultChartSettings() as $period_name => $period) {
-        $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = '$period_name' "
-            . "order by `period_time` desc limit 1");
+    $GLOBALS[mfm_candles][$key] = $value;
+}
 
-        $period_time = ceil($timestamp / $period) * $period;
-        if ($period_time != $last_candle[period_time]) {
-            insertRow(candles, [
-                key => $key,
-                period_name => $period_name,
-                period_time => $period_time,
-                low => $value,
-                high => $value,
-                open => $last_candle[close] ?: $value,
-                close => $value
-            ]);
-        } else {
-            updateWhere(candles, [
-                low => min($last_candle[low], $value),
-                high => max($last_candle[high], $value),
-                close => $value
-            ], [
-                key => $key,
-                period_name => $period_name,
-                period_time => $period_time
-            ]);
+function commitCandles()
+{
+    if ($GLOBALS[mfm_candles] != null) {
+        foreach ($GLOBALS[mfm_candles] as $key => $value) {
+            $timestamp = time();
+            foreach (defaultChartSettings() as $period_name => $period) {
+                $last_candle = selectRow("select * from candles where `key` = '$key' and `period_name` = '$period_name' "
+                    . "order by `period_time` desc limit 1");
+
+                $period_time = ceil($timestamp / $period) * $period;
+                if ($period_time != $last_candle[period_time]) {
+                    insertRow(candles, [
+                        key => $key,
+                        period_name => $period_name,
+                        period_time => $period_time,
+                        low => $value,
+                        high => $value,
+                        open => $last_candle[close] ?: $value,
+                        close => $value
+                    ]);
+                } else {
+                    updateWhere(candles, [
+                        low => min($last_candle[low], $value),
+                        high => max($last_candle[high], $value),
+                        close => $value
+                    ], [
+                        key => $key,
+                        period_name => $period_name,
+                        period_time => $period_time
+                    ]);
+                }
+            }
         }
     }
+
 }
 
 function trackAccumulate($key, $value = 1)
@@ -90,17 +100,31 @@ function getCandleChange24($key)
 
 function trackEvent($app, $name, $value = null, $user_id = null)
 {
-    if (is_array($value))
-        $value = trackObject($value);
-    insertRowAndGetId(events, [
-        ip => $_SERVER['REMOTE_ADDR'],
+    $GLOBALS[mfm_events][] = [
         app => $app,
         name => $name,
         value => $value,
-        user_id => $user_id ?: get_string(gas_address),
-        time => time(),
-    ]);
+        user_id => $user_id,
+    ];
     return $value;
+}
+
+function commitEvents()
+{
+    if ($GLOBALS[mfm_events] != null) {
+        foreach ($GLOBALS[mfm_events] as $event) {
+            if (is_array($event[value]))
+                $event[value] = trackObject($event[value]);
+            insertRowAndGetId(events, [
+                ip => $_SERVER['REMOTE_ADDR'],
+                app => $event[app],
+                name => $event[name],
+                value => $event[value],
+                user_id => $event[user_id] ?: get_string(gas_address),
+                time => time(),
+            ]);
+        }
+    }
 }
 
 function getEvent($app, $name, $value = null, $user_id = null)
@@ -165,15 +189,24 @@ function callLimitPassSec($sec, $postfix = "")
 function trackObject($object)
 {
     $parent = random_key(objects, parent);
-    foreach ($object as $key => $value) {
-        insertRow(objects, [
-            parent => $parent,
-            key => $key,
-            value => $value,
-            time => time(),
-        ]);
-    }
+    $GLOBALS[mfm_objects][$parent] = $object;
     return $parent;
+}
+
+function commitObjects()
+{
+    if ($GLOBALS[mfm_objects] != null){
+        foreach ($GLOBALS[mfm_objects] as $parent => $object) {
+            foreach ($object as $key => $value) {
+                insertRow(objects, [
+                    parent => $parent,
+                    key => $key,
+                    value => $value,
+                    time => time(),
+                ]);
+            }
+        }
+    }
 }
 
 function getObject($parent)
@@ -184,3 +217,11 @@ function getObject($parent)
         $object[$item[key]] = $item[value];
     return $object;
 }
+
+function commitAnalytics()
+{
+    commitCandles();
+    commitEvents();
+    commitObjects();
+}
+
