@@ -9,4 +9,4 @@ $user_id = get_string(user_id);
 trackEvent($app, $name, $value, $user_id);
 trackAccumulate("$app:$name");
 
-echo json_encode(['success' => true]);
+commit();

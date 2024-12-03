@@ -5,4 +5,4 @@ onlyInDebug();
 
 $data = select("select * from events");
 
-echo json_encode($data, JSON_PRETTY_PRINT);
+commit($data);

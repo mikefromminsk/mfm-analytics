@@ -8,4 +8,4 @@ $response[candles] = getCandles($key, $period_name, 30);
 $response[value] = getCandleLastValue($key);
 $response[change24] = getCandleChange24($key);
 
-echo json_encode($response);
+commit($response);

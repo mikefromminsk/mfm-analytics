@@ -18,4 +18,4 @@ $response[events] = getEvents([
 ]) ?: [];
 $response[success] = true;
 
-echo json_encode($response, JSON_PRETTY_PRINT);
+commit($response);

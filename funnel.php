@@ -72,4 +72,4 @@ foreach ($funnel as $item) {
     $response[funnel][$item[str]] = $item[count];
 }
 
-echo json_encode($response, JSON_PRETTY_PRINT);
+commit($response);
