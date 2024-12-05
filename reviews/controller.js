@@ -21,11 +21,13 @@ function openReviews(success) {
             $scope.$apply()
         })
 
-        $scope.sendAnswer = function sendAnswer(item) {
+        $scope.sendAnswer = function reviewAnswer(item) {
             trackCall(arguments)
-            postContract("mfm-telegram", "send_to_address.php", {
-                address: item.user_id,
+            postContract("mfm-messages", "send_to_address.php", {
+                from_address: wallet.address(),
+                to_address: item.user_id,
                 message: item.answer,
+                template: 'feedback',
             }, function () {
                 item.answered = true
                 $scope.$apply()

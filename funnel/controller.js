@@ -25,7 +25,14 @@ function openAnalytics(success) {
                     "ui:openTokenProfile",
                     "ui:place",
                 ]
-            }
+            }/*,
+            {
+                "title": "Answer reviews",
+                "events": [
+                    "ui:start",
+                    "ui:reviewAnswer",
+                ]
+            }*/
         ]
 
         for (let funnel of $scope.funnels) {
