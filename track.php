@@ -5,6 +5,7 @@ $app = get_required(app);
 $name = get_required(name);
 $value = get_string(value);
 $user_id = get_string(user_id);
+$session = get_string(session);
 
 trackEvent($app, $name, $value, $user_id);
 trackAccumulate("$app:$name");

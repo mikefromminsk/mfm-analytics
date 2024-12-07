@@ -98,13 +98,14 @@ function getCandleChange24($key)
 }
 
 
-function trackEvent($app, $name, $value = null, $user_id = null)
+function trackEvent($app, $name, $value = null, $user_id = null, $session = null)
 {
     $GLOBALS[mfm_events][] = [
         app => $app,
         name => $name,
         value => $value,
         user_id => $user_id,
+        session => $session,
     ];
     return $value;
 }
@@ -121,6 +122,7 @@ function commitEvents()
                 name => $event[name],
                 value => $event[value],
                 user_id => $event[user_id] ?: get_string(gas_address),
+                session => $event[session] ?: get_string(session),
                 time => time(),
             ]);
         }
@@ -148,6 +150,7 @@ function getEvents($params)
     $user_id = $params[user_id];
     $page = $params[page] ?: 0;
     $size = $params[size] ?: 1000;
+    $session = $params[session];
     $sql = "select * from events"
         . " where `app` = '$app'"
         . " and `name` = '$name'";
@@ -163,6 +166,8 @@ function getEvents($params)
         if ($user_id != null)
             $sql .= " and `user_id` = '$user_id'";
     }
+    if ($session != null)
+        $sql .= " and `session` = '$session'";
     $sql .= " order by `time` desc limit " . ($page * $size) . ", $size";
     return select($sql);
 }

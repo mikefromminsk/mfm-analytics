@@ -46,6 +46,7 @@ if (sizeof($events) > 0) {
                 time => $event[time],
                 ip => $ip,
                 user_id => $user_id,
+                session => $event[session],
                 size => 1,
             ]);
             if ($next_step != null) {

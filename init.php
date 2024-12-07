@@ -21,6 +21,7 @@ query("CREATE TABLE IF NOT EXISTS `events` (
     `name` varchar(32) COLLATE utf8_bin NOT NULL,
     `value` varchar(128) COLLATE utf8_bin NULL,
     `user_id` varchar(32) COLLATE utf8_bin NULL,
+    `session` varchar(16) COLLATE utf8_bin NULL,
     `time` int NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 
