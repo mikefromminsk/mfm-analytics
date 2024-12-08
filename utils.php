@@ -58,6 +58,18 @@ function trackAccumulate($key, $value = 1)
     trackLinear($key, getCandleLastValue($key) + $value);
 }
 
+function getCandles($key, $period_name, $count = 10)
+{
+    $period = defaultChartSettings()[$period_name];
+    if ($period == null) error("unavailable period");
+
+    $candles = select("select * from candles where `key` = '$key' and `period_name` = '$period_name' "
+        . "order by `period_time` desc limit $count");
+
+    return optimizeCandles(array_reverse($candles), $period, $count);
+}
+
+
 function optimizeCandles($candles, $period, $count = 10)
 {
 
@@ -65,8 +77,9 @@ function optimizeCandles($candles, $period, $count = 10)
     $lastCandle = $candles[count($candles) - 1];
     $candles_map = array_to_map($candles, period_time);
     $result = [];
-    $lastClose = $firstCandle[close];
-    for ($i = $firstCandle[period_time]; $i <= $lastCandle[period_time]; $i += $period) {
+    $lastClose = $lastCandle[close];
+    $period_time = ceil(time() / $period) * $period;
+    for ($i = $period_time; $i >= $firstCandle[period_time] && sizeof($result) < $count; $i -= $period) {
         $item = $candles_map[$i];
         if ($item == null) {
             $result[] = [
@@ -87,18 +100,7 @@ function optimizeCandles($candles, $period, $count = 10)
             ];
         }
     }
-    return $result;
-}
-
-function getCandles($key, $period_name, $count = 10)
-{
-    $period = defaultChartSettings()[$period_name];
-    if ($period == null) error("unavailable period");
-
-    $candles = select("select * from candles where `key` = '$key' and `period_name` = '$period_name' "
-        . "order by `period_time` desc limit $count");
-
-    return optimizeCandles(array_reverse($candles), $period, $count);
+    return array_reverse($result);
 }
 
 function getCandleLastValue($key)

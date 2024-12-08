@@ -3,7 +3,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/mfm-db/utils.php";
 
 onlyInDebug();
 
-query("DROP TABLE IF EXISTS `candles`;");
+//query("DROP TABLE IF EXISTS `candles`;");
 query("CREATE TABLE IF NOT EXISTS `candles` (
     `key` varchar(256) COLLATE utf8_bin NOT NULL,
     `period_name` varchar(2) COLLATE utf8_bin NOT NULL,
@@ -14,7 +14,7 @@ query("CREATE TABLE IF NOT EXISTS `candles` (
     `close` float NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 
-query("DROP TABLE IF EXISTS `events`;");
+//query("DROP TABLE IF EXISTS `events`;");
 query("CREATE TABLE IF NOT EXISTS `events` (
     `ip` varchar(16) COLLATE utf8_bin NOT NULL,
     `app` varchar(16) COLLATE utf8_bin NOT NULL,
@@ -25,7 +25,7 @@ query("CREATE TABLE IF NOT EXISTS `events` (
     `time` int NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 
-query("DROP TABLE IF EXISTS `objects`;");
+//query("DROP TABLE IF EXISTS `objects`;");
 query("CREATE TABLE IF NOT EXISTS `objects` (
     `parent` int NULL,
     `key` varchar(64) COLLATE utf8_bin NOT NULL,
