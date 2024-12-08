@@ -68,14 +68,9 @@ function addChart($scope, key, accomulate_key) {
             accomulate_key: accomulate_key,
             period_name: period_name,
         }, function (response) {
-            var addTime = 0
             if (response.candles != null) {
-                /*for (var candle of response.candles) {
-                    addTime += (60 * 60 * 24 * 1000)
-                    candle.time = new Date(candle.time * 1000 + addTime).toJSON().slice(0, 10)
-                }*/
                 $scope.candleSeries.setData(response.candles)
-                    $scope.accomulateSeries.setData(response.accomulate)
+                $scope.accomulateSeries.setData(response.accomulate)
                 $scope.showNoData = false
             } else {
                 $scope.showNoData = true
