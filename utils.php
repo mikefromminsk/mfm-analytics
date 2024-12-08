@@ -69,10 +69,23 @@ function getCandles($key, $period_name, $count = 10)
     return optimizeCandles(array_reverse($candles), $period, $count);
 }
 
+function getAccomulate($key, $period_name, $count = 10)
+{
+    $candles = getCandles($key, $period_name, $count);
+    foreach ($candles as &$candle) {
+        $candle[value] = $candle[close] - $candle[open];
+        unset($candle[open]);
+        unset($candle[close]);
+        unset($candle[low]);
+        unset($candle[high]);
+    }
+    return $candles;
+}
+
 
 function optimizeCandles($candles, $period, $count = 10)
 {
-
+    if ($candles == null || sizeof($candles) == 0) return [];
     $firstCandle = $candles[0];
     $lastCandle = $candles[count($candles) - 1];
     $candles_map = array_to_map($candles, period_time);
@@ -90,7 +103,7 @@ function optimizeCandles($candles, $period, $count = 10)
                 close => $lastClose,
             ];
         } else {
-            $lastClose = $item[close];
+            $lastClose = $item[open];
             $result[] = [
                 time => $item[period_time],
                 low => $item[low],

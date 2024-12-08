@@ -43,6 +43,6 @@ function openAnalytics(success) {
             })
         }
 
-        addChart($scope, "ui:start")
+        addChart($scope, "ui:start", "ui:start")
     })
 }

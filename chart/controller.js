@@ -20,9 +20,9 @@ function getChartOptions() {
 
 function chartResize(tradeChart, chart) {
     new ResizeObserver(entries => {
-        if (entries.length === 0 || entries[0].target !== tradeChart) return;
-        const newRect = entries[0].contentRect;
-        chart.applyOptions({height: newRect.height, width: newRect.width});
+        if (entries.length === 0 || entries[0].target !== tradeChart) return
+        const newRect = entries[0].contentRect
+        chart.applyOptions({height: newRect.height, width: newRect.width})
     }).observe(tradeChart)
 }
 
@@ -31,14 +31,28 @@ function createChart(id) {
     tradeChart.id = id + randomString(2)
     var chart = LightweightCharts.createChart(tradeChart, getChartOptions())
     chartResize(tradeChart, chart)
-    return chart;
+    return chart
 }
 
-function addChart($scope, key) {
+function addChart($scope, key, accomulate_key) {
     function init() {
         setTimeout(function () {
             if ($scope.candleSeries == null) {
-                $scope.candleSeries = createChart("chart").addCandlestickSeries();
+                let chart = createChart("chart")
+                $scope.candleSeries = chart.addCandlestickSeries()
+                $scope.accomulateSeries = chart.addHistogramSeries({
+                    color: '#26a69a',
+                    priceFormat: {
+                        type: 'volume',
+                    },
+                    priceScaleId: '',
+                })
+                $scope.accomulateSeries.priceScale().applyOptions({
+                    scaleMargins: {
+                        top: 0.9,
+                        bottom: 0,
+                    },
+                })
             }
             $scope.setPeriod($scope.period_name)
         }, !window.chartLoaded ? 300 : 0)
@@ -51,6 +65,7 @@ function addChart($scope, key) {
         $scope.period_name = period_name
         postContract("mfm-analytics", "candles.php", {
             key: key,
+            accomulate_key: accomulate_key,
             period_name: period_name,
         }, function (response) {
             var addTime = 0
@@ -60,11 +75,12 @@ function addChart($scope, key) {
                     candle.time = new Date(candle.time * 1000 + addTime).toJSON().slice(0, 10)
                 }*/
                 $scope.candleSeries.setData(response.candles)
+                    $scope.accomulateSeries.setData(response.accomulate)
                 $scope.showNoData = false
             } else {
                 $scope.showNoData = true
             }
-        });
+        })
     }
 
     $scope.updateChart = function () {
@@ -74,9 +90,10 @@ function addChart($scope, key) {
     init()
 }
 
-function openChart(key, success) {
+function openChartWithAccomulate(key, accomulate_key, success) {
     showBottomSheet('/mfm-analytics/chart/index.html', success, function ($scope) {
         $scope.key = key
-        addChart($scope, key)
+        $scope.accomulate_key = accomulate_key
+        addChart($scope, key, accomulate_key)
     })
 }
