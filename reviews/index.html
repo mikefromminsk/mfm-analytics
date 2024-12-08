@@ -6,28 +6,27 @@
         </div>
     </div>
     <div class="flex col scroll">
-    <div class="flex col block input-content">
-        <div class="col" ng-repeat="item in reviews">
-            <div class="row align-start-center nowrap">
-                <img class="img24 mr8 img-white" src="/mfm-wallet/img/user-circle.svg">
-                <div class="flex">{{item.user_id}}</div>
-                <div class="mh8">{{formatTimeDiff(item.time)}}</div>
-                <img class="img20 img-green" src="/mfm-wallet/img/like.svg" ng-show="item.name == 'like'">
-                <img class="img20 img-red" src="/mfm-wallet/img/dislike.svg" ng-show="item.name == 'dislike'">
-            </div>
-            <p class="mv8">{{item.value}}</p>
-            <div class="row mv16">
+        <div class="flex col block input-content">
+            <div class="col" ng-repeat="item in reviews">
+                <div class="row align-start-center nowrap">
+                    <img class="img24 mr8 img-white" src="/mfm-wallet/img/user-circle.svg">
+                    <div class="flex">{{item.user_id}}</div>
+                    <div class="mh8">{{formatTimeDiff(item.time)}}</div>
+                    <img class="img20 img-green" src="/mfm-wallet/img/like.svg" ng-show="item.name == 'like'">
+                    <img class="img20 img-red" src="/mfm-wallet/img/dislike.svg" ng-show="item.name == 'dislike'">
+                </div>
+                <p class="mv8">{{item.value}}</p>
+                <div class="row mv16">
                 <textarea class="flex" ng-model="item.answer"
                           oninput="this.style['min-height'] = ''; this.style['min-height'] = this.scrollHeight +'px'"></textarea>
-                <div class="row">
-                    <div class="button"
-                         ng-click="sendAnswer(item)"
-                         ng-disabled="item.answered || !item.answer">
-                        <img class="img20 img-white" src="/mfm-wallet/img/arrow-right.svg">
+                    <div class="row">
+                        <button ng-click="sendAnswer(item)"
+                                ng-disabled="item.answered || !item.answer">
+                            <img class="img20 img-white" src="/mfm-wallet/img/arrow-right.svg">
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </md-dialog>

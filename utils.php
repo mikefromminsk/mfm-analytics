@@ -58,17 +58,36 @@ function trackAccumulate($key, $value = 1)
     trackLinear($key, getCandleLastValue($key) + $value);
 }
 
-function optimizeCandles($candles)
+function optimizeCandles($candles, $period, $count = 10)
 {
-    return array_map(function ($candle) {
-        return [
-            time => $candle[period_time],
-            low => $candle[low],
-            high => $candle[high],
-            open => $candle[open],
-            close => $candle[close],
-        ];
-    }, $candles);
+
+    $firstCandle = $candles[0];
+    $lastCandle = $candles[count($candles) - 1];
+    $candles_map = array_to_map($candles, period_time);
+    $result = [];
+    $lastClose = $firstCandle[close];
+    for ($i = $firstCandle[period_time]; $i <= $lastCandle[period_time]; $i += $period) {
+        $item = $candles_map[$i];
+        if ($item == null) {
+            $result[] = [
+                time => $i,
+                low => $lastClose,
+                high => $lastClose,
+                open => $lastClose,
+                close => $lastClose,
+            ];
+        } else {
+            $lastClose = $item[close];
+            $result[] = [
+                time => $item[period_time],
+                low => $item[low],
+                high => $item[high],
+                open => $item[open],
+                close => $item[close],
+            ];
+        }
+    }
+    return $result;
 }
 
 function getCandles($key, $period_name, $count = 10)
@@ -79,7 +98,7 @@ function getCandles($key, $period_name, $count = 10)
     $candles = select("select * from candles where `key` = '$key' and `period_name` = '$period_name' "
         . "order by `period_time` desc limit $count");
 
-    return optimizeCandles(array_reverse($candles));
+    return optimizeCandles(array_reverse($candles), $period, $count);
 }
 
 function getCandleLastValue($key)

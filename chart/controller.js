@@ -11,6 +11,10 @@ function getChartOptions() {
         crosshair: {
             mode: LightweightCharts.CrosshairMode.Normal,
         },
+        timeScale: {
+            timeVisible: true,
+            secondsVisible: false,
+        }
     }
 }
 
@@ -51,10 +55,10 @@ function addChart($scope, key) {
         }, function (response) {
             var addTime = 0
             if (response.candles != null) {
-                for (var candle of response.candles) {
+                /*for (var candle of response.candles) {
                     addTime += (60 * 60 * 24 * 1000)
                     candle.time = new Date(candle.time * 1000 + addTime).toJSON().slice(0, 10)
-                }
+                }*/
                 $scope.candleSeries.setData(response.candles)
                 $scope.showNoData = false
             } else {
