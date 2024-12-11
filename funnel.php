@@ -44,7 +44,6 @@ if (sizeof($events) > 0) {
                 name => $step[name],
                 value => $step[value],
                 time => $event[time],
-                ip => $ip,
                 user_id => $user_id,
                 session => $event[session],
                 size => 1,

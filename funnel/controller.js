@@ -11,11 +11,11 @@ function openAnalytics(success) {
                 ]
             },
             {
-                "title": "Email open",
+                "title": "Email open test_invite2",
                 "events": [
-                    "email:send",
+                    "email:send=test_invite2",
                     "email:readed",
-                    "ui:email_referer",
+                    "ui:start",
                 ]
             },
             {

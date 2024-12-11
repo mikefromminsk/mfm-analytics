@@ -180,7 +180,6 @@ function getEvents($params)
     $name = $params[name];
     $value = $params[value];
     $time = $params[time];
-    $ip = $params[ip];
     $user_id = $params[user_id];
     $page = $params[page] ?: 0;
     $size = $params[size] ?: 1000;
@@ -192,16 +191,14 @@ function getEvents($params)
         $sql .= " and `value` = '$value'";
     if ($time != null)
         $sql .= " and `time` >= $time";
-    if ($ip != null && $user_id != null){
-        $sql .= " and (`ip` = '$ip' or `user_id` = '$user_id')";
+    if ($session != null && $user_id != null){
+        $sql .= " and (`session` = '$session' or `user_id` = '$user_id')";
     } else {
-        if ($ip != null)
-            $sql .= " and `ip` = '$ip'";
+        if ($session != null)
+            $sql .= " and `session` = '$session'";
         if ($user_id != null)
             $sql .= " and `user_id` = '$user_id'";
     }
-    if ($session != null)
-        $sql .= " and `session` = '$session'";
     $sql .= " order by `time` desc limit " . ($page * $size) . ", $size";
     return select($sql);
 }
@@ -225,11 +222,11 @@ function callLimitPassSec($sec, $postfix = "")
 }
 
 
-function trackObject($object)
+function trackObject($object, $parent_id = null)
 {
-    $parent = random_key(objects, parent);
-    $GLOBALS[mfm_objects][$parent] = $object;
-    return $parent;
+    $parent_id = $parent_id ?: random_key(objects, parent);
+    $GLOBALS[mfm_objects][$parent_id] = $object;
+    return $parent_id;
 }
 
 function commitObjects()
@@ -248,12 +245,15 @@ function commitObjects()
     }
 }
 
-function getObject($parent)
+function getObject($parent_id)
 {
-    $objects = select("select * from objects where `parent` = $parent");
-    $object = [];
-    foreach ($objects as $item)
-        $object[$item[key]] = $item[value];
+    $object = $GLOBALS[mfm_objects][$parent_id];
+    if ($object == null){
+        $objects = select("select * from objects where `parent` = $parent_id");
+        $object = [];
+        foreach ($objects as $item)
+            $object[$item[key]] = $item[value];
+    }
     return $object;
 }
 
