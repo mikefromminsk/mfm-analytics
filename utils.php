@@ -180,7 +180,6 @@ function getEvents($params)
     $name = $params[name];
     $value = $params[value];
     $time = $params[time];
-    $user_id = $params[user_id];
     $page = $params[page] ?: 0;
     $size = $params[size] ?: 1000;
     $session = $params[session];
@@ -191,14 +190,8 @@ function getEvents($params)
         $sql .= " and `value` = '$value'";
     if ($time != null)
         $sql .= " and `time` >= $time";
-    if ($session != null && $user_id != null){
-        $sql .= " and (`session` = '$session' or `user_id` = '$user_id')";
-    } else {
-        if ($session != null)
-            $sql .= " and `session` = '$session'";
-        if ($user_id != null)
-            $sql .= " and `user_id` = '$user_id'";
-    }
+    if ($session != null)
+        $sql .= " and `session` = '$session'";
     $sql .= " order by `time` desc limit " . ($page * $size) . ", $size";
     return select($sql);
 }
@@ -231,7 +224,7 @@ function trackObject($object, $parent_id = null)
 
 function commitObjects()
 {
-    if ($GLOBALS[mfm_objects] != null){
+    if ($GLOBALS[mfm_objects] != null) {
         foreach ($GLOBALS[mfm_objects] as $parent => $object) {
             foreach ($object as $key => $value) {
                 insertRow(objects, [
@@ -248,7 +241,7 @@ function commitObjects()
 function getObject($parent_id)
 {
     $object = $GLOBALS[mfm_objects][$parent_id];
-    if ($object == null){
+    if ($object == null) {
         $objects = select("select * from objects where `parent` = $parent_id");
         $object = [];
         foreach ($objects as $item)

@@ -25,6 +25,14 @@ function openAnalytics(success) {
                     "ui:openTokenProfile",
                     "ui:place",
                 ]
+            },
+            {
+                "title": "Get credits",
+                "events": [
+                    "ui:start",
+                    "ui:openGetCredit",
+                    "ui:getCredit",
+                ]
             }/*,
             {
                 "title": "Answer reviews",
@@ -40,6 +48,7 @@ function openAnalytics(success) {
                 funnel: funnel.events.join(","),
             }, function (response) {
                 funnel.response = response
+                $scope.$apply()
             })
         }
 
